@@ -1,0 +1,26 @@
+# Copy to provision.toml and fill in your values (provision.toml is gitignored).
+
+[robot]
+# Soft-AP SSID while provisioning — same as BLID.
+blid = "0000000000000000"
+# Format: :1:<unix_timestamp>:<16 alphanumeric chars>
+password = ":1:0000000000:AAAAAAAAAAAAAAAA"
+host = "192.168.10.1"
+port = 8883
+ca_cert = "robot-ca.pem"
+
+[wifi]
+ssid = "MyHomeNetwork"
+password = "wifi-passphrase"
+# 7 = WPA2-PSK on most Roomba 900-series firmware
+sec = 7
+
+[locale]
+timezone = "America/Chicago"
+country = "US"
+ntp_hosts = "0.us.pool.ntp.org 1.us.pool.ntp.org 2.us.pool.ntp.org 3.us.pool.ntp.org"
+
+[provisioning]
+# Pause between MQTT commands; timezone step should produce a beep.
+command_delay_seconds = 1.0
+post_password_delay_seconds = 2.0

@@ -39,37 +39,36 @@ Connect using mqtt protocol v3.1.1 and send commands via `json` messages from th
 11 | wifictl | { "state" : { "get" : "netinfo" } }
 12 | wifictl | { "state" : { "uap" : false } }
 
-## Python script
+## Usage
 
-There is a proof of concept in this repo.
+`initial-config.py` pushes the robot password and provisions Wi-Fi. Requires [uv](https://docs.astral.sh/uv/) (or Python 3.11+ with paho-mqtt installed).
 
-- press the 'CLEAN' button until you hear a sound, keep it pressed, it will blink, keep it pressed, all light flash, now release
-- press home + spot until you hear a melody
-- connect you PC to the Access Point. Roomba will speak
+1. Reset the robot (press Clean until **all** lights flash)
+2. Enter soft-AP mode (press Home+Spot until melody + blinking WiFi LED)
+3. Connect your PC to the Roomba access point (SSID = BLID)
 
-- Check the WIFI SSID name, it's your BLID, set it in the script
-- Update your wifi parameters in the script
-- Launch the script
+```bash
+cp provision.toml.example provision.toml
+# edit provision.toml — robot BLID/password and your home Wi-Fi credentials
+./initial-config.py
+# or: ./initial-config.py -c /path/to/provision.toml
+```
 
-Note: the instruction that set "timezone" *must* emit a bip.
+`provision.toml` is gitignored. Only `provision.toml.example` belongs in the repo.
+
+The timezone command **must** produce a beep from the robot.
 
 ```
 $ ./initial-config.py
-received data: hex: b'f023', length: 2
-received data: hex: b'efcc3b29003a313a313537393139353338363a386678376e597156744b67574a39744f', length: 35
-received data: hex: b'f023efcc3b29003a313a313537393139353338363a386678376e597156744b67574a39744f', length: 37
-Sending: delta { "state" : { "timezone" : "Europe/Paris" } }    <<<<======= THIS MUST EMIT A BIP
-Sending: wifictl {"state": {"wlcfg": {"pass": "wifisecretpasssword", "sec": 7, "ssid": "54657374"}}}
-Sending: wifictl { "state" : { "chkssid" : true } }
-Sending: wifictl { "state" : { "wactivate" : true } }
-Sending: wifictl { "state" : { "get" : "netinfo" } }
-Sending: wifictl { "state" : { "uap" : false } }   <<=== after some seconds, the wifi led should stay white
+recv 2 bytes: f023
+recv 35 bytes: efcc3b2900...
+auth response (37 bytes): f023efcc3b2900...
+publish delta {"state":{"timezone":"America/Chicago"}}    <<<<======= THIS MUST EMIT A SOUND
+publish wifictl {"state":{"wlcfg":{...}}}
+...
 ```
 
-## Bash script
-
-A bash script has been added with the mqtt commannds. It require mosquitto client (`$ apt-get install mosquitto-clients`). 
-Do not forget to edit the script to set your values.
+After a few seconds the soft-AP should drop and the WiFi LED should stay solid white.
 
 # Thanks
 I want to thanks my wife and my familly ;)
