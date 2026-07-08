@@ -1,12 +1,10 @@
-# Roomba980-Wifi
+# Roomba9xx-Wifi
 Configure irobot wifi series using command line
-
-I finally got there!
 
 # Steps
 ## Push a password
 1. Reset to robot (press Clean until **all** lights up)
-2. Start Soft AP (press Home+Spot) until sound + green wifi led blink - Eventually try again if the error bip sounds
+2. Start Soft AP (press Home+Spot) until sound + green wifi led blink - Eventually try again if you hear an error sound
 1. The password is pushed to the robot using an MQTT Authentication Exchange packet
     `echo -n "f023efcc3b29003a313a313537393139353338363a386678376e597156744b67574a39744f" | xxd -r -p | openssl s_client -CAfile robot-ca.pem  -connect 192.168.10.1 -quiet -noservername`. This output the password back if set correctly.
 
@@ -26,7 +24,7 @@ Connect using mqtt protocol v3.1.1 and send commands via `json` messages from th
 
 &nbsp; | Topic | payload | Comment
 ------- | ------- | ---------- | --------------
-1 | delta | { "state" : { "timezone" : "Europe/Paris" } } | makes the robot bip once of two
+1 | delta | { "state" : { "timezone" : "Europe/Paris" } } | makes the robot beep once or twice
 2 | wifictl | { "state" : { "sdiscUrl" : "https://disc-prod.iot.irobotapi.com/v1/robot/discover?robot_id=0000000000000000&country_code=FR&sku=R966040" } } | I did not checked what is this api…
 3 | wifictl | { "state" : { "ntphosts" : "0.irobot.pool.ntp.org 1.irobot.pool.ntp.org 2.irobot.pool.ntp.org 3.irobot.pool.ntp.org" } }
 4 | delta | { "state" : {"country" : "FR"} }
